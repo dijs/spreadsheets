@@ -56,7 +56,7 @@ function Cell({ id, data, editing, handleChange, handleFocus, handleBlur }) {
 }
 
 export default function Table(props) {
-  const { width, height, handleClear } = props;
+  const { width, height, handleClear, addColumn, addRow } = props;
   const rows = [];
   rows.push(
     <tr key="row0">
@@ -64,6 +64,7 @@ export default function Table(props) {
       {
         Array(width).fill(0).map((v, x) => <th key={'col' + x}>{toRow(x)}</th>)
       }
+      <th onClick={addColumn}>+</th>
     </tr>
   );
   for (let y = 1; y <= height; y++) {
@@ -87,6 +88,9 @@ export default function Table(props) {
     <table>
       <tbody>
         {rows}
+        <tr>
+          <td className="row-label" onClick={addRow}>+</td>
+        </tr>
       </tbody>
     </table>
   );

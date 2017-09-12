@@ -8,6 +8,8 @@ class App extends Component {
     this.state = {
       data: {},
       editing: undefined,
+      width: 5,
+      height: 10,
     };
   }
   handleChange(id, value) {
@@ -17,13 +19,15 @@ class App extends Component {
   }
   render() {
     return <Table
-      width={5}
-      height={10}
+      width={this.state.width}
+      height={this.state.height}
       editing={this.state.editing}
       handleChange={this.handleChange.bind(this)}
       handleFocus={id => this.setState({ editing: id })}
       handleBlur={() => this.setState({ editing: undefined })}
       handleClear={() => this.setState({ data: {}, editing: undefined })}
+      addColumn={() => this.setState({ width: this.state.width + 1 })}
+      addRow={() => this.setState({ height: this.state.height + 1 })}
       data={this.state.data}
     />;
   }
