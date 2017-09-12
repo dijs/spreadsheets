@@ -1,0 +1,14 @@
+.row-label {
+  background-color: lightblue;
+  color: white;
+}
+
+th {
+  background-color: red;
+  color: white;
+}
+
+input {
+  background-color: gainsboro;
+  border: none;
+}
