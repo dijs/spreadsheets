@@ -1,18 +1,33 @@
-.row-label {
-  background-color: lightblue;
-  color: white;
+th, .row-label {
+  background: #eee;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 8pt;
+  color: #222;
+  height: 23px;
+  border: solid 1px #ccc;
+  border-width: 0 1px 1px 0;
+  overflow: hidden;
+  padding: 0;
+  width: 40px;
 }
 
-th {
-  background-color: red;
-  color: white;
+table { 
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .cell {
-  background-color: gainsboro;
-  border: none;
+  border: solid 1px #ccc;
+}
+
+.cell input {
+  border: 0;
+  font-size: 10pt;
+  outline: none;
 }
 
 .cell.editing {
-  background-color: lightgreen;
+  border: solid 3px #5f96ff;
 }

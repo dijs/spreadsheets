@@ -32,7 +32,6 @@ function Cell({ id, data, editing, handleChange, handleFocus, handleBlur }) {
   const editingExpression = isExpression(data[editing]);
   return <input
     type="text"
-    className={classes('cell', { editing: editing === id })}
     onChange={e => handleChange(id, parseInput(e.target.value))}
     onKeyUp={e => {
       if (e.which === 13) {
@@ -56,7 +55,7 @@ function Cell({ id, data, editing, handleChange, handleFocus, handleBlur }) {
 }
 
 export default function Table(props) {
-  const { width, height, handleClear, addColumn, addRow } = props;
+  const { width, height, handleClear, addColumn, addRow, editing } = props;
   const rows = [];
   rows.push(
     <tr key="row0">
@@ -76,7 +75,7 @@ export default function Table(props) {
             .fill(0)
             .map((v, x) => toRow(x) + y)
             .map(id => {
-              return <td key={id}>
+              return <td className={classes('cell', { editing: editing === id })}>
                 <Cell id={id} {...props} />
               </td>;
             })
