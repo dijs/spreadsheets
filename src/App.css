@@ -8,7 +8,7 @@ th {
   color: white;
 }
 
-input {
+.cell {
   background-color: gainsboro;
   border: none;
 }
