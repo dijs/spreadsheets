@@ -21,9 +21,9 @@ export default function Table({ width, height, handleChange, data }) {
         {
           Array(width).fill(0).map((v, x) => {
             const id = toRow(x) + y;
-            const value = data[id] || '';
+            const value = data[id] || 0;
             return <td key={id}>
-              <input type="text" className="cell" onChange={e => handleChange(id, e.target.value)} value={value} />
+              <input type="text" className="cell" onChange={e => handleChange(id, e.target.value)} value={value || ''} />
             </td>;
           })
         }
