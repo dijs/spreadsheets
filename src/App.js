@@ -23,6 +23,7 @@ class App extends Component {
       handleChange={this.handleChange.bind(this)}
       handleFocus={id => this.setState({ editing: id })}
       handleBlur={() => this.setState({ editing: undefined })}
+      handleClear={() => this.setState({ data: {}, editing: undefined })}
       data={this.state.data}
     />;
   }

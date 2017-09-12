@@ -12,3 +12,7 @@ th {
   background-color: gainsboro;
   border: none;
 }
+
+.cell.editing {
+  background-color: lightgreen;
+}

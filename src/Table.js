@@ -1,17 +1,23 @@
 import React from 'react';
 import safeEval from 'notevil';
+import classes from 'classnames';
 
 function toRow(n) {
   return String.fromCharCode('A'.charCodeAt(0) + n);
 }
 
 function getValue(expression, context) {
+  if (!expression) {
+    return '';
+  }
   try {
     return safeEval(expression.replace(/^=/, ''), context);
   } catch (e) {
     return expression;
   }
 }
+
+const isExpression = v => !!(v || '').toString().match(/^=/);
 
 function parseInput(value) {
   const n = parseFloat(value, 10);
@@ -21,22 +27,40 @@ function parseInput(value) {
   return n;
 }
 
+// TODO: Move into own file
 function Cell({ id, data, editing, handleChange, handleFocus, handleBlur }) {
+  const editingExpression = isExpression(data[editing]);
   return <input
     type="text"
-    className="cell"
-    onFocus={() => handleFocus(id)}
-    onBlur={handleBlur}
+    className={classes('cell', { editing: editing === id })}
     onChange={e => handleChange(id, parseInput(e.target.value))}
-    value={editing ? data[id] : getValue(data[id], data)}
+    onKeyUp={e => {
+      if (e.which === 13) {
+        handleBlur();
+        e.target.blur();
+      }
+    }}
+    onClick={e => {
+      // If editing expression and not clicking itself
+      if (editingExpression && editing !== id) {
+        e.preventDefault();
+        console.log('Adding reference to current expression', editing, id);
+        handleChange(editing, data[editing] + id);
+      } else {
+        handleFocus(id);
+      }
+      return false;
+    }}
+    value={editing === id ? data[id] : getValue(data[id], data)}
   />;
 }
 
-export default function Table({ width, height, handleChange, data, editing, handleFocus, handleBlur }) {
+export default function Table(props) {
+  const { width, height, handleClear } = props;
   const rows = [];
   rows.push(
     <tr key="row0">
-      <th/>
+      <th onClick={handleClear}>↻</th>
       {
         Array(width).fill(0).map((v, x) => <th key={'col' + x}>{toRow(x)}</th>)
       }
@@ -47,19 +71,14 @@ export default function Table({ width, height, handleChange, data, editing, hand
       <tr key={'row' + y}>
         <td className="row-label">{y}</td>
         {
-          Array(width).fill(0).map((v, x) => {
-            const id = toRow(x) + y;
-            return <td key={id}>
-              <Cell
-                id={id}
-                data={data}
-                editing={editing === id}
-                handleChange={handleChange}
-                handleFocus={handleFocus}
-                handleBlur={handleBlur}
-              />
-            </td>;
-          })
+          Array(width)
+            .fill(0)
+            .map((v, x) => toRow(x) + y)
+            .map(id => {
+              return <td key={id}>
+                <Cell id={id} {...props} />
+              </td>;
+            })
         }
       </tr>
     );
