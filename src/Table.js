@@ -3,6 +3,14 @@ import classes from 'classnames';
 import Cell from './Cell';
 import { toId, toRow, getFormulas, isExpression } from './utils';
 
+function renderFormulas(text) {
+  const list = getFormulas(text);
+  if (list.length) {
+    return list.map(name => <p key={name}>{name}</p>)
+  }
+  return null;
+}
+
 export default function Table(props) {
   const { data, width, height, handleClear, addColumn, addRow, active, move } = props;
   const rows = [];
@@ -26,17 +34,17 @@ export default function Table(props) {
             .map((v, x) => {
               const id = toRow(x) + y;
               const active = activeId === id;
-              const filtering = active && isExpression(data[activeId]);
+              const text = data[activeId];
+              const filtering = active && isExpression(data[activeId]) && getFormulas(text).length;
               const classNames = {
                 cell: true,
                 filtering,
                 active,
               };
-              const text = data[activeId];
               const filter = filtering
                 ? <div className="filter">
                   <div className="filter-inner">
-                    {getFormulas(text).map(name => <p key={name}>{name}</p>)}
+                    {renderFormulas(text)}
                   </div>
                 </div>
                 : null;
