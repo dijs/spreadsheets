@@ -1,5 +1,6 @@
 import React from 'react';
 import safeEval from 'notevil';
+import * as excelFunctions from '@quantlab/formulajs';
 import classes from 'classnames';
 
 function toRow(n) {
@@ -11,7 +12,7 @@ function getValue(expression, context) {
     return '';
   }
   try {
-    return safeEval(expression.replace(/^=/, ''), context);
+    return safeEval(expression.replace(/^=/, ''), Object.assign({}, context, excelFunctions));
   } catch (e) {
     return expression;
   }

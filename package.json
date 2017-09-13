@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://dijs.github.io/spreadsheets/",
   "dependencies": {
+    "@quantlab/formulajs": "^1.1.2",
     "classnames": "^2.2.5",
     "gh-pages": "^1.0.0",
     "notevil": "^1.1.0",
