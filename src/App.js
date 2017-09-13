@@ -8,7 +8,7 @@ function getSavedState() {
 
 const defaultState = {
   data: {},
-  editing: undefined,
+  active: undefined,
   width: 5,
   height: 10,
 };
@@ -31,17 +31,27 @@ class App extends Component {
       data: Object.assign({}, this.state.data, { [id]: value }),
     }, this.savedState.bind(this));
   }
+  handleMove(dx, dy) {
+    const curr = this.state.active || { x: 0, y: 0 };
+    this.setState({
+      active: {
+        x: Math.min(Math.max(curr.x + dx, 0), this.state.width - 1),
+        y: Math.min(Math.max(curr.y + dy, 1), this.state.height),
+      },
+    });
+  }
   render() {
     return <Table
       width={this.state.width}
       height={this.state.height}
-      editing={this.state.editing}
+      active={this.state.active}
       handleChange={this.handleChange.bind(this)}
-      handleFocus={id => this.setState({ editing: id })}
-      handleBlur={() => this.setState({ editing: undefined })}
+      handleFocus={coords => this.setState({ active: coords })}
+      handleBlur={() => this.setState({ active: undefined })}
       handleClear={() => this.setState(Object.assign({}, defaultState), this.savedState.bind(this))}
       addColumn={() => this.setState({ width: this.state.width + 1 }, this.savedState.bind(this))}
       addRow={() => this.setState({ height: this.state.height + 1 }, this.savedState.bind(this))}
+      move={this.handleMove.bind(this)}
       data={this.state.data}
     />;
   }

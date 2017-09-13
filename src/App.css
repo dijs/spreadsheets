@@ -28,6 +28,6 @@ table {
   outline: none;
 }
 
-.cell.editing {
+.cell.active {
   border: solid 3px #5f96ff;
 }

@@ -1,62 +1,12 @@
 import React from 'react';
-import safeEval from 'notevil';
-import * as excelFunctions from '@quantlab/formulajs';
 import classes from 'classnames';
-
-function toRow(n) {
-  return String.fromCharCode('A'.charCodeAt(0) + n);
-}
-
-function getValue(expression, context) {
-  if (!expression) {
-    return '';
-  }
-  try {
-    return safeEval(expression.replace(/^=/, ''), Object.assign({}, context, excelFunctions));
-  } catch (e) {
-    return expression;
-  }
-}
-
-const isExpression = v => !!(v || '').toString().match(/^=/);
-
-function parseInput(value) {
-  const n = parseFloat(value, 10);
-  if (isNaN(n)) {
-    return value;
-  }
-  return n;
-}
-
-// TODO: Move into own file
-function Cell({ id, data, editing, handleChange, handleFocus, handleBlur }) {
-  const editingExpression = isExpression(data[editing]);
-  return <input
-    type="text"
-    onChange={e => handleChange(id, parseInput(e.target.value))}
-    onKeyUp={e => {
-      if (e.which === 13) {
-        handleBlur();
-        e.target.blur();
-      }
-    }}
-    onClick={e => {
-      // If editing expression and not clicking itself
-      if (editingExpression && editing !== id) {
-        e.preventDefault();
-        handleChange(editing, data[editing] + id);
-      } else {
-        handleFocus(id);
-      }
-      return false;
-    }}
-    value={editing === id ? data[id] : getValue(data[id], data)}
-  />;
-}
+import Cell from './Cell';
+import { toId, toRow } from './utils';
 
 export default function Table(props) {
-  const { width, height, handleClear, addColumn, addRow, editing } = props;
+  const { width, height, handleClear, addColumn, addRow, active, move } = props;
   const rows = [];
+  const activeId = toId(active);
   rows.push(
     <tr key="row0">
       <th onClick={handleClear}>↻</th>
@@ -73,10 +23,10 @@ export default function Table(props) {
         {
           Array(width)
             .fill(0)
-            .map((v, x) => toRow(x) + y)
-            .map(id => {
-              return <td key={id} className={classes('cell', { editing: editing === id })}>
-                <Cell id={id} {...props} />
+            .map((v, x) => {
+              const id = toRow(x) + y;
+              return <td key={id} className={classes('cell', { active: activeId === id })}>
+                <Cell coords={{ x, y }} {...props} />
               </td>;
             })
         }
@@ -84,7 +34,15 @@ export default function Table(props) {
     );
   }
   return (
-    <table>
+    <table onKeyUp={e => {
+      switch (e.which) {
+        case 40: return move(0, 1);
+        case 38: return move(0, -1);
+        case 37: return move(-1, 0);
+        case 39: return move(1, 0);
+        default: return;
+      }
+    }}>
       <tbody>
         {rows}
         <tr>
