@@ -43,7 +43,6 @@ function Cell({ id, data, editing, handleChange, handleFocus, handleBlur }) {
       // If editing expression and not clicking itself
       if (editingExpression && editing !== id) {
         e.preventDefault();
-        console.log('Adding reference to current expression', editing, id);
         handleChange(editing, data[editing] + id);
       } else {
         handleFocus(id);
@@ -75,7 +74,7 @@ export default function Table(props) {
             .fill(0)
             .map((v, x) => toRow(x) + y)
             .map(id => {
-              return <td className={classes('cell', { editing: editing === id })}>
+              return <td key={id} className={classes('cell', { editing: editing === id })}>
                 <Cell id={id} {...props} />
               </td>;
             })

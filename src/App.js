@@ -2,16 +2,21 @@ import React, { Component } from 'react';
 import Table from './Table';
 import './App.css';
 
+function getSavedState() {
+  return JSON.parse(localStorage.getItem('state') || '{}');
+}
+
+const defaultState = {
+  data: {},
+  editing: undefined,
+  width: 5,
+  height: 10,
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
-    const saved = JSON.parse(localStorage.getItem('state') || {});
-    this.state = {
-      data: saved.data || {},
-      editing: undefined,
-      width: saved.width || 5,
-      height: saved.height || 10,
-    };
+    this.state = Object.assign({}, defaultState, getSavedState());
   }
   savedState() {
     const jsonState = JSON.stringify({
@@ -34,7 +39,7 @@ class App extends Component {
       handleChange={this.handleChange.bind(this)}
       handleFocus={id => this.setState({ editing: id })}
       handleBlur={() => this.setState({ editing: undefined })}
-      handleClear={() => this.setState({ data: {}, editing: undefined }, this.savedState.bind(this))}
+      handleClear={() => this.setState(Object.assign({}, defaultState), this.savedState.bind(this))}
       addColumn={() => this.setState({ width: this.state.width + 1 }, this.savedState.bind(this))}
       addRow={() => this.setState({ height: this.state.height + 1 }, this.savedState.bind(this))}
       data={this.state.data}
