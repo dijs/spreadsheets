@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Table from './Table';
+import { buildCSV, authorizeDrive, uploadCSV } from './utils';
 import './App.css';
 
 function getSavedState() {
@@ -11,6 +12,7 @@ const defaultState = {
   active: undefined,
   width: 5,
   height: 10,
+  uploading: false,
 };
 
 class App extends Component {
@@ -40,7 +42,12 @@ class App extends Component {
       },
     });
   }
-  render() {
+  handleExport() {
+    this.setState({ uploading: true });
+    const csv = buildCSV(this.state.width, this.state.height, this.state.data);
+    return authorizeDrive(() => uploadCSV(csv, () => this.setState({ uploading: false })));
+  }
+  renderTable() {
     return <Table
       width={this.state.width}
       height={this.state.height}
@@ -53,7 +60,17 @@ class App extends Component {
       addRow={() => this.setState({ height: this.state.height + 1 }, this.savedState.bind(this))}
       move={this.handleMove.bind(this)}
       data={this.state.data}
-    />;
+    />;    
+  }
+  render() {
+    return <div>
+      {this.renderTable()}
+      {
+        this.state.uploading
+        ? "Exporting..."
+        : <button onClick={this.handleExport.bind(this)}>Export to Google Drive</button>
+      }
+    </div>;
   }
 }
 
