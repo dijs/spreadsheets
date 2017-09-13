@@ -5,6 +5,10 @@ export function toRow(n) {
   return String.fromCharCode('A'.charCodeAt(0) + n);
 }
 
+const formulaNames = Object.keys(excelFunctions);
+
+export const getFormulas = text => formulaNames.filter(name => name.includes(text.replace(/^=/, '').toUpperCase()));
+
 export function toId(coords) {
   if (!coords) {
     return undefined;

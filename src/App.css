@@ -26,8 +26,33 @@ table {
   border: 0;
   font-size: 10pt;
   outline: none;
+  height: 24px;
+  width: 150px;
 }
 
 .cell.active {
+  position: relative;
   border: solid 3px #5f96ff;
+}
+
+.cell .filter {
+  display: none;
+  position: absolute;
+  top: calc(24px + 6px + 1px);
+  left: -3px;
+  width: calc(150px);
+  height: 100px;
+  background-color: #ddd;
+  font-size: 10px;
+  padding-left: 10px;
+}
+
+.cell .filter-inner {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 100px;
+}
+
+.cell.active.filtering .filter {
+  display: block;
 }

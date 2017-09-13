@@ -12,8 +12,9 @@ export default class Cell extends Component {
   render() {
     const { coords, data, active, handleChange, handleFocus, handleBlur, move } = this.props;
     const id = toId(coords);
-    const editingExpression = isExpression(data[active]);
-    const isActive = toId(active) === id;
+    const activeId = toId(active);
+    const editingExpression = isExpression(data[activeId]);
+    const isActive = activeId === id;
     return <input
       type="text"
       ref={id}
@@ -29,7 +30,7 @@ export default class Cell extends Component {
         // If editing expression and not clicking itself
         if (editingExpression && !isActive) {
           e.preventDefault();
-          handleChange(id, data[active] + id);
+          handleChange(activeId, data[activeId] + id);
         } else {
           handleFocus(coords);
         }

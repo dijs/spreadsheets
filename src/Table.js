@@ -1,10 +1,10 @@
 import React from 'react';
 import classes from 'classnames';
 import Cell from './Cell';
-import { toId, toRow } from './utils';
+import { toId, toRow, getFormulas, isExpression } from './utils';
 
 export default function Table(props) {
-  const { width, height, handleClear, addColumn, addRow, active, move } = props;
+  const { data, width, height, handleClear, addColumn, addRow, active, move } = props;
   const rows = [];
   const activeId = toId(active);
   rows.push(
@@ -25,7 +25,23 @@ export default function Table(props) {
             .fill(0)
             .map((v, x) => {
               const id = toRow(x) + y;
-              return <td key={id} className={classes('cell', { active: activeId === id })}>
+              const active = activeId === id;
+              const filtering = active && isExpression(data[activeId]);
+              const classNames = {
+                cell: true,
+                filtering,
+                active,
+              };
+              const text = data[activeId];
+              const filter = filtering
+                ? <div className="filter">
+                  <div className="filter-inner">
+                    {getFormulas(text).map(name => <p key={name}>{name}</p>)}
+                  </div>
+                </div>
+                : null;
+              return <td key={id} className={classes(classNames)}>
+                {filter}
                 <Cell coords={{ x, y }} {...props} />
               </td>;
             })
