@@ -2,6 +2,7 @@
   "name": "spreadsheets",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dijs.github.io/spreadsheets/",
   "dependencies": {
     "classnames": "^2.2.5",
     "gh-pages": "^1.0.0",
@@ -15,6 +16,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build"
+    "deploy": "react-scripts build && gh-pages -d build"
   }
 }
