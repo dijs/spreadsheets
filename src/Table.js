@@ -12,7 +12,7 @@ function renderFormulas(text) {
 }
 
 export default function Table(props) {
-  const { data, width, height, handleClear, addColumn, addRow, active, move } = props;
+  const { data, width, height, handleClear, addColumn, addRow, active, move, selected } = props;
   const rows = [];
   const activeId = toId(active);
   rows.push(
@@ -40,6 +40,7 @@ export default function Table(props) {
                 cell: true,
                 filtering,
                 active,
+                selected: selected.includes(id),
               };
               const filter = filtering
                 ? <div className="filter">

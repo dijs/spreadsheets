@@ -35,6 +35,13 @@ table {
   border: solid 3px #5f96ff;
 }
 
+.cell.selected {
+  background-color: #c7dbff;
+}
+.cell.selected input {
+  background-color: #c7dbff;
+}
+
 .cell .filter {
   display: none;
   position: absolute;

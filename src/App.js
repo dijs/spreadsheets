@@ -10,6 +10,7 @@ function getSavedState() {
 const defaultState = {
   data: {},
   active: undefined,
+  selected: {},
   width: 5,
   height: 10,
   uploading: false,
@@ -52,9 +53,11 @@ class App extends Component {
       width={this.state.width}
       height={this.state.height}
       active={this.state.active}
+      selected={Object.keys(this.state.selected)}
+      handleSelect={id => this.setState({ selected: { [id]: true } })}
       handleChange={this.handleChange.bind(this)}
       handleFocus={coords => this.setState({ active: coords })}
-      handleBlur={() => this.setState({ active: undefined })}
+      handleBlur={() => this.setState({ active: undefined, selected: {} })}
       handleClear={() => this.setState(Object.assign({}, defaultState), this.savedState.bind(this))}
       addColumn={() => this.setState({ width: this.state.width + 1 }, this.savedState.bind(this))}
       addRow={() => this.setState({ height: this.state.height + 1 }, this.savedState.bind(this))}

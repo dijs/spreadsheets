@@ -10,17 +10,19 @@ export default class Cell extends Component {
     }
   }
   render() {
-    const { coords, data, active, handleChange, handleFocus, handleBlur, move } = this.props;
+    const { coords, data, active, selected, handleChange, handleFocus, handleBlur, handleSelect, move } = this.props;
     const id = toId(coords);
     const activeId = toId(active);
     const editingExpression = isExpression(data[activeId]);
     const isActive = activeId === id;
+    const expressionString = (data[activeId] || '') + (selected[0] || '');
     return <input
       type="text"
       ref={id}
       onChange={e => handleChange(id, parseInput(e.target.value))}
       onKeyUp={e => {
         if (e.which === 13) {
+          handleChange(activeId, expressionString);
           handleBlur();
           e.target.blur();
           move(0, 1);
@@ -30,13 +32,14 @@ export default class Cell extends Component {
         // If editing expression and not clicking itself
         if (editingExpression && !isActive) {
           e.preventDefault();
-          handleChange(activeId, data[activeId] + id);
+          handleSelect(id);
+          // handleChange(activeId, data[activeId] + id);
         } else {
           handleFocus(coords);
         }
         return false;
       }}
-      value={isActive ? (data[id] || '') : getValue(data[id], data)}
+      value={isActive ? expressionString : getValue(data[id], data)}
     />;
   }
 }
