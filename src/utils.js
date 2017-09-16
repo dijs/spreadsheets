@@ -25,9 +25,19 @@ export function getValue(expression, context) {
     return '';
   }
   try {
-    return safeEval(expression.replace(/^=/, ''), Object.assign({}, context, excelFunctions));
+    const transformed = expression
+      .replace(/^=/, '')
+      .replace(/([A-Z])(\d+):([A-Z])(\d+)/g, (match, c1, r1, c2, r2) => {
+        // Limited to one column right now
+        const list = [];
+        for (let row = parseInt(r1, 10); row <= parseInt(r2, 10); row++) {
+          list.push(c1 + row);
+        }
+        return list.join(',');
+      });
+    return safeEval(transformed, Object.assign({}, context, excelFunctions));
   } catch (e) {
-    return expression;
+    return expression || '';
   }
 }
 

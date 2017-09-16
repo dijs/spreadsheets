@@ -36,7 +36,7 @@ export default class Cell extends Component {
         }
         return false;
       }}
-      value={isActive ? data[id] : getValue(data[id], data)}
+      value={isActive ? (data[id] || '') : getValue(data[id], data)}
     />;
   }
 }
